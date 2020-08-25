@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   has_many :blogs, :through => :posts, :source => :content, :source_type => 'Blog'
   has_many :reviews, :through => :posts, :source => :content, :source_type => 'Review'
 
+  validates :name, uniqueness: { case_sensitive: false }
   validates :email, uniqueness: { case_sensitive: false }
   validates :password, presence: true, length: { minimum: 7 }
 

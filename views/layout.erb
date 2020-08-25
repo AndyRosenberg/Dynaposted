@@ -24,7 +24,9 @@
             Log In
           <% end %>
         </a>
-        <a class="navbar-item is-hidden-desktop" href="/users/new">Sign Up</a>
+        <% unless signed_in %>
+          <a class="navbar-item is-hidden-desktop" href="/users/new">Sign Up</a>
+        <% end %>
       </div>
 
       <div id="nav-start" class="navbar-menu">
@@ -38,9 +40,11 @@
                   Log In
                 <% end %>
               </a>
-              <a href="/users/new" class="button is-light">
-                Sign Up
-              </a>
+              <% unless signed_in %>
+                <a href="/users/new" class="button is-light">
+                  Sign Up
+                </a>
+              <% end %>
             </div>
           </div>
         </div>

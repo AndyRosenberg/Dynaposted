@@ -11,9 +11,9 @@
                 <form action="/logins/authenticate" method="POST">
                   <input type="hidden" name="authenticity_token" v-model="csrf" />
                   <div class="field">
-                    <label for="" class="label has-text-white">Email</label>
+                    <label for="email" class="label has-text-white">Username or Email</label>
                     <div class="control has-icons-left">
-                      <input type="email" name="email" placeholder="Enter your email." class="input" required>
+                      <input type="text" name="email" placeholder="Enter your username or email." class="input" required>
                     </div>
                   </div>
 

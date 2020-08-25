@@ -6,12 +6,15 @@ class LoginsController < Roda
 
     r.post "authenticate" do
       params = login_params(r)
-      user = User.find_by("LOWER(email) = LOWER(?)", params["email"])
+      user = User.find_by(
+        "LOWER(?) IN (LOWER(name), LOWER(email))",
+        params["email"]
+      )
 
       if user && user.authenticate(params["password"])
         session["current_user_id"] = user.id
         flash["message"] = "Login successful!"
-        r.redirect("/den")
+        r.redirect("/")
       else
         flash.now["message"] = "Invalid username or password."
         view('logins/sign_in')

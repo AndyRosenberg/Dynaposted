@@ -6,7 +6,7 @@ class UsersController < Roda
         if !user.new_record?
           session["current_user_id"] = user.id
           flash["message"] = "User has been created!"
-          r.redirect("/den")
+          r.redirect("/")
         else
           flash.now["message"] = "Something went wrong. Please try again."
           view('users/new')
