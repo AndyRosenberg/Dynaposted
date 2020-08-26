@@ -4,6 +4,7 @@ import TurbolinksAdapter from 'vue-turbolinks';
 import Vue from 'vue/dist/vue.esm.js';
 import './events/flash-delete-button.js';
 import NewUserForm from './components/users/NewUserForm.vue';
+import EditUserForm from './components/users/EditUserForm.vue';
 import SignIn from './components/logins/SignIn.vue';
 
 Turbolinks.start()
@@ -14,6 +15,7 @@ document.addEventListener('turbolinks:load', () => {
     el: "#app",
     components: {
       'new-user-form': NewUserForm,
+      'edit-user-form': EditUserForm,
       'sign-in': SignIn,
     }
   });

@@ -19,16 +19,47 @@ class UsersController < Roda
     end
 
     r.on Integer do |id|
-      r.get do
-        # show
+      r.is do
+        r.get do
+          # show
+        end
+
+        r.put do
+          current_user_id = session["current_user_id"]
+          unless current_user_id && id == current_user_id.to_i
+            flash["message"] = "Unauthorized update this user."
+            r.redirect("/")
+          end
+
+          user = User.find(current_user_id)
+          new_attrs = user_params(r)
+
+          if new_attrs["password"].empty?
+            new_attrs.delete("password")
+          else
+            user.password_has_changed = true
+          end
+
+          if user.update(new_attrs)
+            flash["message"] = "User has been updated!"
+            r.redirect("/")
+          else
+            flash.now["message"] = "Something went wrong. Please try again."
+            @current_user_json = user.to_json
+            view('users/edit')
+          end
+        end
       end
 
       r.get "edit" do
-        # edit
-      end
+        current_user_id = session["current_user_id"]
+        unless current_user_id && id == current_user_id.to_i
+          flash["message"] = "Unauthorized to view this page."
+          r.redirect("/")
+        end
 
-      r.on "", method: ['put', 'patch'] do
-        # update
+        @current_user_json = User.find(current_user_id).to_json
+        view('users/edit')
       end
 
       r.on "", method: :delete do
