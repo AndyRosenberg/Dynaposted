@@ -38,8 +38,27 @@
                     <button class="button is-success">
                       Update
                     </button>
+                    <button class="button is-danger" @click.stop.prevent="promptDelete">
+                      Delete my account
+                    </button>
                   </div>
                 </form>
+
+                <div class="mt-2">
+                  <form :action="action" method="POST" ref="deleteForm" v-if="showDelete">
+                    <input type="hidden" name="authenticity_token" v-model="csrf" />
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <div class="control has-icons-left mb-1">
+                      <input type="text" name="confirm" class="input" v-model="deleteName" placeholder="type your username to confirm">
+                    </div>
+
+                    <div class="field">
+                      <button class="button is-black">
+                        Cormfirm
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
@@ -60,6 +79,8 @@
         name: '',
         email: '',
         password: '',
+        showDelete: false,
+        deleteName: '',
       };
     },
 
@@ -68,6 +89,12 @@
       this.action = `/users/${this.user.id}`;
       this.name = this.user.name;
       this.email = this.user.email;
+    },
+
+    methods: {
+      promptDelete() {
+        this.showDelete = !this.showDelete;
+      },
     }
   }
 </script>

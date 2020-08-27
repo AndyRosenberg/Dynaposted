@@ -25,13 +25,7 @@ class UsersController < Roda
         end
 
         r.put do
-          current_user_id = session["current_user_id"]
-          unless current_user_id && id == current_user_id.to_i
-            flash["message"] = "Unauthorized update this user."
-            r.redirect("/")
-          end
-
-          user = User.find(current_user_id)
+          authorize_user(r, id)
           new_attrs = user_params(r)
 
           if new_attrs["password"].empty?
@@ -44,9 +38,22 @@ class UsersController < Roda
             flash["message"] = "User has been updated!"
             r.redirect("/")
           else
-            flash.now["message"] = "Something went wrong. Please try again."
-            @current_user_json = user.to_json
-            view('users/edit')
+            somethings_wrong("Something went wrong. Please try again.")
+          end
+        end
+
+        r.delete do
+          authorize_user(r, id)
+          if r.params["confirm"] == user.name
+            if user.destroy
+              flash["message"] = "User has been deleted!"
+              session.clear
+              r.redirect("/")
+            else
+              somethings_wrong("User has been deleted!")
+            end
+          else
+            somethings_wrong("Name did not match.")
           end
         end
       end
@@ -61,15 +68,30 @@ class UsersController < Roda
         @current_user_json = User.find(current_user_id).to_json
         view('users/edit')
       end
-
-      r.on "", method: :delete do
-        # destroy
-      end
     end
   end
 
   private
+  attr_accessor :user, :current_user_id
+
   def user_params(r)
     r.params.slice("email", "name", "password", "time_zone")
+  end
+
+  def authorize_user(r, id)
+    self.current_user_id = session["current_user_id"]
+
+    unless current_user_id && id == current_user_id.to_i
+      flash["message"] = "Unauthorized update this user."
+      r.redirect("/")
+    end
+
+    self.user = User.find(current_user_id)
+  end
+
+  def somethings_wrong(message)
+    flash.now["message"] = message
+    @current_user_json = user.to_json
+    view('users/edit')
   end
 end
