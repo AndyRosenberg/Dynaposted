@@ -59,13 +59,8 @@ class UsersController < Roda
       end
 
       r.get "edit" do
-        current_user_id = session["current_user_id"]
-        unless current_user_id && id == current_user_id.to_i
-          flash["message"] = "Unauthorized to view this page."
-          r.redirect("/")
-        end
-
-        @current_user_json = User.find(current_user_id).to_json
+        authorize_user(r, id)
+        @current_user_json = user.to_json
         view('users/edit')
       end
     end
