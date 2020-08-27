@@ -1,13 +1,11 @@
 class Roda
-  def self.render_plugins
-    use Rack::MethodOverride
-    plugin :render, escape: true
-    plugin :sessions, secret: ENV["SESSION_SECRET"]
-    plugin :all_verbs
-    plugin :route_csrf
-    plugin :public
-    plugin :flash
-  end
+  use Rack::MethodOverride
+  plugin :render, escape: true
+  plugin :sessions, secret: ENV["SESSION_SECRET"]
+  plugin :all_verbs
+  plugin :route_csrf
+  plugin :public
+  plugin :flash
 
   def api_only(r)
     r.redirect "/" unless r.env["HTTP_ACCEPT"] == "application/json"

@@ -7,8 +7,6 @@ require 'erubi'
 require "sinatra/activerecord"
 require_relative "roda_ext"
 
-Roda.class_eval { render_plugins }
-
 def dirload(dir)
   File.join(__dir__, "../../#{dir}/*.rb")
 end
